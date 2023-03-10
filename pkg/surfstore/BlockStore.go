@@ -24,10 +24,6 @@ func (bs *BlockStore) GetBlock(ctx context.Context, blockHash *BlockHash) (*Bloc
 
 func (bs *BlockStore) PutBlock(ctx context.Context, block *Block) (*Success, error) {
 	hash := GetBlockHashString(block.BlockData)
-	fmt.Println("put block with hash: ", hash)
-	if hash == "de3838cc41790d6e1e3ccd70ffad947c774f6653b5b0bdce7b585e73e6b3ed88" {
-		fmt.Println("put invalid hash block")
-	}
 	bs.BlockMap[hash] = block
 	return &Success{Flag: true}, nil
 }

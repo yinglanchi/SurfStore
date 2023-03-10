@@ -8,7 +8,6 @@ import (
 	"math"
 	"os"
 	"reflect"
-	"time"
 )
 
 func uploadFile(client RPCClient, metaData *FileMetaData, blockHashes []string) error {
@@ -36,6 +35,7 @@ func uploadFile(client RPCClient, metaData *FileMetaData, blockHashes []string) 
 	hashToAddr := make(map[string]string)
 	for addr, hashes := range blockStoreMap {
 		for _, hash := range hashes {
+			fmt.Println("In uploadFile with hash: ", hash, "addr: ", addr)
 			hashToAddr[hash] = addr
 		}
 	}
@@ -55,7 +55,6 @@ func uploadFile(client RPCClient, metaData *FileMetaData, blockHashes []string) 
 		if err := client.PutBlock(&block, hashToAddr[GetBlockHashString(blockData)], &success); err != nil {
 			log.Fatal(err)
 		}
-		time.Sleep(10 * time.Millisecond)
 	}
 
 	if err := client.UpdateFile(metaData, &version); err != nil {
@@ -68,7 +67,6 @@ func uploadFile(client RPCClient, metaData *FileMetaData, blockHashes []string) 
 }
 
 func downloadFile(client RPCClient, local *FileMetaData, remote *FileMetaData) error {
-	fmt.Println("in downloadFile")
 	filepath := client.BaseDir + "/" + remote.Filename
 	file, err := os.Create(filepath)
 	if err != nil {
@@ -94,6 +92,7 @@ func downloadFile(client RPCClient, local *FileMetaData, remote *FileMetaData) e
 	hashToAddr := make(map[string]string)
 	for addr, hashes := range blockStoreMap {
 		for _, hash := range hashes {
+			fmt.Println("In downloadFile with hash: ", hash, "addr: ", addr)
 			hashToAddr[hash] = addr
 		}
 	}
@@ -118,7 +117,6 @@ func ClientSync(client RPCClient) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("test", len(localIndex))
 
 	files, err := ioutil.ReadDir(client.BaseDir)
 	if err != nil {

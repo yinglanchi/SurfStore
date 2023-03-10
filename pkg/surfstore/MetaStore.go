@@ -2,6 +2,7 @@ package surfstore
 
 import (
 	context "context"
+	"fmt"
 
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
@@ -37,6 +38,7 @@ func (m *MetaStore) GetBlockStoreMap(ctx context.Context, blockHashesIn *BlockHa
 	blockStoreMap := make(map[string]*BlockHashes)
 	for _, blockHash := range blockHashesIn.Hashes {
 		blockServerAddr := m.ConsistentHashRing.GetResponsibleServer(blockHash)
+		fmt.Println("in GetBlockStoreMap with hash: ", blockHash, "addr: ", blockServerAddr)
 		blockHashes[blockServerAddr] = append(blockHashes[blockServerAddr], blockHash)
 	}
 	for addr, hashes := range blockHashes {
