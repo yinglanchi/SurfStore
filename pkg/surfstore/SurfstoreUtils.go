@@ -8,6 +8,7 @@ import (
 	"math"
 	"os"
 	"reflect"
+	"time"
 )
 
 func uploadFile(client RPCClient, metaData *FileMetaData, blockHashes []string) error {
@@ -54,6 +55,7 @@ func uploadFile(client RPCClient, metaData *FileMetaData, blockHashes []string) 
 		if err := client.PutBlock(&block, hashToAddr[GetBlockHashString(blockData)], &success); err != nil {
 			log.Fatal(err)
 		}
+		time.Sleep(10 * time.Millisecond)
 	}
 
 	if err := client.UpdateFile(metaData, &version); err != nil {
@@ -65,7 +67,7 @@ func uploadFile(client RPCClient, metaData *FileMetaData, blockHashes []string) 
 	return nil
 }
 
-func downloadFile(client RPCClient, local *FileMetaData, remote *FileMetaData, blockHashes []string) error {
+func downloadFile(client RPCClient, local *FileMetaData, remote *FileMetaData) error {
 	fmt.Println("in downloadFile")
 	filepath := client.BaseDir + "/" + remote.Filename
 	file, err := os.Create(filepath)
@@ -116,9 +118,7 @@ func ClientSync(client RPCClient) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	for fileName := range localIndex {
-		fmt.Println(fileName)
-	}
+	fmt.Println("test", len(localIndex))
 
 	files, err := ioutil.ReadDir(client.BaseDir)
 	if err != nil {
@@ -181,14 +181,14 @@ func ClientSync(client RPCClient) {
 	for filename, remote := range remoteIndex {
 		if local, ok := localIndex[filename]; ok {
 			if local.Version < remote.Version {
-				downloadFile(client, local, remote, hashMap[filename])
+				downloadFile(client, local, remote)
 			} else if local.Version == remote.Version && !reflect.DeepEqual(local.BlockHashList, remote.BlockHashList) {
-				downloadFile(client, local, remote, hashMap[filename])
+				downloadFile(client, local, remote)
 			}
 		} else {
 			localIndex[filename] = &FileMetaData{}
 			localMetaData := localIndex[filename]
-			downloadFile(client, localMetaData, remote, hashMap[filename])
+			downloadFile(client, localMetaData, remote)
 		}
 	}
 

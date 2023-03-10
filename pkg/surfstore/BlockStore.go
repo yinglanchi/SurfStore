@@ -2,6 +2,7 @@ package surfstore
 
 import (
 	context "context"
+	"fmt"
 
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
@@ -13,11 +14,20 @@ type BlockStore struct {
 
 func (bs *BlockStore) GetBlock(ctx context.Context, blockHash *BlockHash) (*Block, error) {
 	b := bs.BlockMap[blockHash.Hash]
-	return b, nil
+	if b != nil {
+		fmt.Println("valid hash: ", blockHash.Hash)
+		return b, nil
+	}
+	fmt.Println("invalid hash: ", blockHash.Hash)
+	return &Block{BlockData: make([]byte, 0), BlockSize: 0}, nil
 }
 
 func (bs *BlockStore) PutBlock(ctx context.Context, block *Block) (*Success, error) {
 	hash := GetBlockHashString(block.BlockData)
+	fmt.Println("put block with hash: ", hash)
+	if hash == "de3838cc41790d6e1e3ccd70ffad947c774f6653b5b0bdce7b585e73e6b3ed88" {
+		fmt.Println("put invalid hash block")
+	}
 	bs.BlockMap[hash] = block
 	return &Success{Flag: true}, nil
 }

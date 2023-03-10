@@ -1,0 +1,1 @@
+We will conduct similar tests to the previous project, but this time on multiple servers. Make sure your surfstore supports multiple servers, and ClientSync works as expected. In addition, we will check your block mapping by calling SurfstorePrintBlockMapping.

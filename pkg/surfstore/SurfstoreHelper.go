@@ -101,11 +101,9 @@ func LoadMetaFromMetaFile(baseDir string) (fileMetaMap map[string]*FileMetaData,
 	var hashValueSlices []string
 	rows, err := db.Query("SELECT * FROM indexes")
 	if err != nil {
-		fmt.Println(err)
 		log.Fatal(err)
 	}
 	for rows.Next() {
-		fmt.Println(rows)
 		err := rows.Scan(&filename, &version, &hashIndex, &hashValue)
 		if err != nil {
 			log.Fatal(err)
