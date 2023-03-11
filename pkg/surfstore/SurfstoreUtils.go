@@ -1,7 +1,6 @@
 package surfstore
 
 import (
-	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -35,7 +34,6 @@ func uploadFile(client RPCClient, metaData *FileMetaData, blockHashes []string) 
 	hashToAddr := make(map[string]string)
 	for addr, hashes := range blockStoreMap {
 		for _, hash := range hashes {
-			fmt.Println("In uploadFile with hash: ", hash, "addr: ", addr)
 			hashToAddr[hash] = addr
 		}
 	}
@@ -92,7 +90,6 @@ func downloadFile(client RPCClient, local *FileMetaData, remote *FileMetaData) e
 	hashToAddr := make(map[string]string)
 	for addr, hashes := range blockStoreMap {
 		for _, hash := range hashes {
-			fmt.Println("In downloadFile with hash: ", hash, "addr: ", addr)
 			hashToAddr[hash] = addr
 		}
 	}
