@@ -18,15 +18,14 @@ func (c ConsistentHashRing) GetResponsibleServer(blockId string) string {
 	}
 	sort.Strings(hashes)
 	fmt.Println("the sorted consistentHashRing key are: ", hashes)
-	blockHash := c.Hash(blockId)
 	responsibleServer := ""
 	for i := 0; i < len(hashes); i++ {
-		if hashes[i] >= blockHash {
+		if hashes[i] >= blockId {
 			responsibleServer = c.ServerMap[hashes[i]]
 			break
 		}
 	}
-	fmt.Println("the hash that we need to map is: ", blockHash, "the responsible server is: ", responsibleServer)
+	fmt.Println("the hash that we need to map is: ", blockId, "the responsible server is: ", responsibleServer)
 	if responsibleServer == "" {
 		responsibleServer = c.ServerMap[hashes[0]]
 	}
